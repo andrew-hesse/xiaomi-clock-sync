@@ -15,14 +15,10 @@ This page is a tiny single-purpose alternative.
 
 ## Live demo
 
-Once deployed to GitHub Pages, the app will be served at:
+[**andrew-hesse.github.io/xiaomi-clock-sync**](https://andrew-hesse.github.io/xiaomi-clock-sync/)
 
-```
-https://<your-username>.github.io/xiaomi-clock-sync/
-```
-
-(Open it in a supported browser — see below — and follow the *How to use*
-steps.)
+Open it in a supported browser (see below) and follow the *How to use*
+steps.
 
 ---
 
@@ -138,7 +134,7 @@ directly between your browser and the clock.
 You'll need Node 20 or newer.
 
 ```bash
-git clone https://github.com/<your-username>/xiaomi-clock-sync.git
+git clone https://github.com/andrew-hesse/xiaomi-clock-sync.git
 cd xiaomi-clock-sync
 npm install
 
