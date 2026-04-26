@@ -16,9 +16,9 @@ export function renderFirstVisit(props: FirstVisitProps): HTMLElement {
         <div class="stage__caption">no clock paired</div>
       </div>
       <button class="btn btn--ghost" data-pair type="button">Pair Xiaomi clock</button>
-      <p class="stage__caption" style="margin-top:-8px;">
+      <div class="stage__caption">
         Make sure Bluetooth is on and the clock is within ~5 m.
-      </p>
+      </div>
     `,
   );
 
