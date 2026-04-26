@@ -16,8 +16,11 @@ export class ClockClient {
   }
 
   static async pickAndConnect(): Promise<ClockClient> {
+    // Two filter alternatives so a clock that advertises one but not the
+    // other still appears in the picker. Mirrors the iOS app's lenient
+    // name-contains match.
     const device = await navigator.bluetooth.requestDevice({
-      filters: [{ namePrefix: DEVICE_NAME_PREFIX }],
+      filters: [{ namePrefix: DEVICE_NAME_PREFIX }, { services: [SERVICE_UUID] }],
       optionalServices: [SERVICE_UUID],
     });
     return new ClockClient(device);

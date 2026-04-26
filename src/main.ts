@@ -15,9 +15,23 @@ const state = createSignal<AppState>(supported ? { kind: 'first-visit' } : { kin
 
 let client: ClockClient | null = null;
 
+// True when the user dismissed the OS device chooser without picking anything,
+// or no devices matched the filters. Both surface as DOMException NotFoundError
+// — neither is a real error from the user's perspective.
+function isUserCancellation(err: unknown): boolean {
+  return err instanceof DOMException && err.name === 'NotFoundError';
+}
+
 function messageOf(err: unknown): string {
-  if (err instanceof DOMException && err.name === 'NotFoundError') {
-    return 'No clock chosen.';
+  if (err instanceof DOMException) {
+    switch (err.name) {
+      case 'SecurityError':
+        return 'Bluetooth blocked by the browser. Check site permissions and reload.';
+      case 'NetworkError':
+        return "Couldn't connect — make sure the clock is nearby and not paired with another device.";
+      case 'NotSupportedError':
+        return 'This device or browser does not support Web Bluetooth.';
+    }
   }
   if (err instanceof Error) return err.message;
   return 'Unknown error.';
@@ -43,6 +57,11 @@ async function pair(): Promise<void> {
     const stored = loadStored();
     state.set({ kind: 'idle', device: client.meta, lastSyncedAt: stored.lastSyncedAt });
   } catch (err) {
+    // Cancelling the picker is a no-op, not an error — just stay on first-visit.
+    if (isUserCancellation(err)) {
+      state.set({ kind: 'first-visit' });
+      return;
+    }
     state.set({ kind: 'error', device: client?.meta ?? null, message: messageOf(err) });
   }
 }
