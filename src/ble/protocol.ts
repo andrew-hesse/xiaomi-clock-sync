@@ -1,7 +1,7 @@
 // 5-byte payload to the time characteristic of a Xiaomi LYWSD02:
 // bytes 0-3: uint32 little-endian Unix epoch seconds
 // byte 4:    int8 UTC offset in hours (signed; UTC-5 encodes as 0xFB)
-export function encodeTimePayload(now: Date, offsetHours: number): Uint8Array {
+export function encodeTimePayload(now: Date, offsetHours: number): Uint8Array<ArrayBuffer> {
   const buf = new ArrayBuffer(5);
   const view = new DataView(buf);
   view.setUint32(0, Math.floor(now.getTime() / 1000), true);

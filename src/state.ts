@@ -1,5 +1,6 @@
-// Temporary local type until ble/client.ts is introduced; replaced with re-export there.
-export type ClockMeta = { id: string; name: string };
+import type { ClockMeta } from './ble/client';
+
+export type { ClockMeta };
 
 export type AppState =
   | { kind: 'unsupported' }
