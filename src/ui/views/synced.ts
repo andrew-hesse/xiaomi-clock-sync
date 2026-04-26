@@ -1,6 +1,6 @@
 import type { ClockMeta } from '../../ble/client';
 import { flash, progressArc } from '../animations';
-import { createHeroClock } from '../clock';
+import { createLiveClock } from '../clock';
 import { html, setHtml } from '../dom';
 
 export type SyncedProps = { device: ClockMeta; at: number };
@@ -13,33 +13,36 @@ export function renderSynced(props: SyncedProps): HTMLElement {
     root,
     html`
       <header class="header"><span class="micro">Clock Sync</span></header>
-      <div class="hero" data-hero></div>
-      <div class="card" data-card>
-        <span class="dot accent"></span>
-        <div class="card__body">
-          <div class="card__title mono">${props.device.name}</div>
-          <div class="card__sub">synced just now</div>
+      <div class="stage" data-stage>
+        <div data-clock></div>
+        <hr class="stage__rule" />
+        <div class="stage__device">
+          <span class="dot accent"></span>
+          <div>
+            <div class="stage__name mono">${props.device.name}</div>
+            <div class="stage__sub">synced just now</div>
+          </div>
         </div>
       </div>
       <div class="busy-stage">
-        <div class="btn btn--circle" data-arc style="background:transparent;color:var(--accent);"></div>
+        <div class="busy-stage__circle" data-arc></div>
       </div>
       <div class="sr-only" role="status" aria-live="polite">${announcement}</div>
     `,
   );
 
-  const hero = createHeroClock();
-  const heroHost = root.querySelector<HTMLElement>('[data-hero]');
-  if (heroHost) hero.mount(heroHost);
+  const clock = createLiveClock();
+  const clockSlot = root.querySelector<HTMLElement>('[data-clock]');
+  if (clockSlot) clock.mount(clockSlot);
 
   const arcHost = root.querySelector<HTMLElement>('[data-arc]');
-  const card = root.querySelector<HTMLElement>('[data-card]');
+  const stage = root.querySelector<HTMLElement>('[data-stage]');
   if (arcHost) {
     const arc = progressArc(arcHost, 1);
     requestAnimationFrame(() => {
       arc.complete();
-      hero.pulse();
-      if (card) flash(card);
+      clock.pulse();
+      if (stage) flash(stage);
     });
   }
 
