@@ -13,7 +13,10 @@ async function main() {
   const svg = await readFile(src);
 
   for (const size of [192, 512]) {
-    await sharp(svg).resize(size, size).png().toFile(join(out, `icon-${size}.png`));
+    await sharp(svg)
+      .resize(size, size)
+      .png()
+      .toFile(join(out, `icon-${size}.png`));
   }
 
   // Maskable: content scaled to 76% with solid background — 12% safe zone each side.
