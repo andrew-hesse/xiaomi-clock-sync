@@ -14,22 +14,52 @@
 }
 
 .hero__time {
-  font-size: clamp(64px, 12vw, 96px);
+  font-size: clamp(44px, 13vw, 76px);
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   color: var(--ink);
   font-weight: 500;
-}
-
-.hero__time .colon {
-  transition: opacity 0.2s ease;
-}
-.hero__time .colon.dim {
-  opacity: 0.45;
+  white-space: nowrap;
 }
 
 .hero__time .digit {
   display: inline-block;
+}
+
+/*
+ * Render the colon as two CSS-drawn dots rather than rely on the font's `:`
+ * glyph, which at heavy weights and large sizes tends to fuse the two dots
+ * into a single rectangle. The actual `:` character is hidden via `color:
+ * transparent` so screen readers still announce "nine colon twenty-nine".
+ */
+.hero__time .colon {
+  display: inline-block;
+  width: 0.32em;
+  height: 1em;
+  position: relative;
+  vertical-align: baseline;
+  color: transparent;
+  transition: opacity 0.2s ease;
+}
+.hero__time .colon::before,
+.hero__time .colon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 0.16em;
+  height: 0.16em;
+  border-radius: 50%;
+  background: var(--ink);
+  transform: translateX(-50%);
+}
+.hero__time .colon::before {
+  top: 26%;
+}
+.hero__time .colon::after {
+  bottom: 26%;
+}
+.hero__time .colon.dim {
+  opacity: 0.4;
 }
 
 .hero__date {
