@@ -3,7 +3,7 @@ import { html, setHtml } from './dom';
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-export type HeroClock = { mount(host: HTMLElement): void; pulse(): void; stop(): void };
+export type LiveClock = { mount(host: HTMLElement): void; pulse(): void; stop(): void };
 
 function pad(n: number): string {
   return n.toString().padStart(2, '0');
@@ -16,7 +16,13 @@ function formatOffset(d: Date): string {
   return `UTC${sign}${hours}`;
 }
 
-export function createHeroClock(): HeroClock {
+/*
+ * Renders the time display ROWS only (a `.stage__time` and a `.stage__date`)
+ * into the host. The host is expected to be a slot inside a `.stage` element.
+ * Owns its own rAF loop; rebuilds once per second; the colon dim/undim is
+ * patched in-place at sub-second resolution without re-rendering the digits.
+ */
+export function createLiveClock(): LiveClock {
   let host: HTMLElement | null = null;
   let raf = 0;
   let lastSecond = -1;
@@ -33,14 +39,14 @@ export function createHeroClock(): HeroClock {
     setHtml(
       host,
       html`
-      <div class="hero__time mono" aria-hidden="true">
-        <span class="digit">${hh}</span><span class="colon ${dim}">:</span><span class="digit">${mm}</span><span class="colon ${dim}">:</span><span class="digit">${ss}</span>
-      </div>
-      <div class="hero__date">
-        ${day} · ${now.getDate()} ${month} · ${formatOffset(now)}
-      </div>
-      <span class="sr-only" aria-live="off">Current time ${hh}:${mm}</span>
-    `,
+        <div class="stage__time mono" aria-hidden="true">
+          <span class="digit">${hh}</span><span class="colon ${dim}">:</span><span class="digit">${mm}</span><span class="colon ${dim}">:</span><span class="digit">${ss}</span>
+        </div>
+        <div class="stage__date">
+          ${day} · ${now.getDate()} ${month} · ${formatOffset(now)}
+        </div>
+        <span class="sr-only" aria-live="off">Current time ${hh}:${mm}</span>
+      `,
     );
   }
 
@@ -67,7 +73,7 @@ export function createHeroClock(): HeroClock {
     },
     pulse() {
       if (!host) return;
-      const time = host.querySelector<HTMLElement>('.hero__time');
+      const time = host.querySelector<HTMLElement>('.stage__time');
       if (!time) return;
       time.animate(
         [{ transform: 'scale(1)' }, { transform: 'scale(1.02)' }, { transform: 'scale(1)' }],

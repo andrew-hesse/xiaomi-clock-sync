@@ -1,5 +1,5 @@
 import type { ClockMeta } from '../../ble/client';
-import { createHeroClock } from '../clock';
+import { createLiveClock } from '../clock';
 import { html, setHtml } from '../dom';
 
 export type IdleProps = {
@@ -29,24 +29,28 @@ export function renderIdle(props: IdleProps): HTMLElement {
     root,
     html`
       <header class="header"><span class="micro">Clock Sync</span></header>
-      <div class="hero" data-hero></div>
-      <div class="card">
-        <span class="dot"></span>
-        <div class="card__body">
-          <div class="card__title mono">${props.device.name}</div>
-          <div class="card__sub">${relativeTime(props.lastSyncedAt)}</div>
+      <div class="stage">
+        <div data-clock></div>
+        <hr class="stage__rule" />
+        <div class="stage__device">
+          <span class="dot"></span>
+          <div>
+            <div class="stage__name mono">${props.device.name}</div>
+            <div class="stage__sub">${relativeTime(props.lastSyncedAt)}</div>
+          </div>
         </div>
       </div>
       <button class="btn" data-sync type="button">Sync now</button>
       <div class="tertiary">
         <button class="link" data-pick type="button">Use a different clock</button>
-        <button class="link" data-forget type="button">Forget this clock</button>
+        <span class="tertiary__sep">·</span>
+        <button class="link link--danger" data-forget type="button">Forget</button>
       </div>
     `,
   );
 
-  const heroHost = root.querySelector<HTMLElement>('[data-hero]');
-  if (heroHost) createHeroClock().mount(heroHost);
+  const clockSlot = root.querySelector<HTMLElement>('[data-clock]');
+  if (clockSlot) createLiveClock().mount(clockSlot);
 
   root.querySelector<HTMLButtonElement>('[data-sync]')?.addEventListener('click', props.onSync);
   root

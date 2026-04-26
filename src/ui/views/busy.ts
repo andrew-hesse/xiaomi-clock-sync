@@ -1,6 +1,6 @@
 import type { ClockMeta } from '../../ble/client';
 import { progressArc } from '../animations';
-import { createHeroClock } from '../clock';
+import { createLiveClock } from '../clock';
 import { html, setHtml } from '../dom';
 
 export type BusyProps = { device: ClockMeta; phase: 'connecting' | 'syncing' };
@@ -14,24 +14,27 @@ export function renderBusy(props: BusyProps): HTMLElement {
     root,
     html`
       <header class="header"><span class="micro">Clock Sync</span></header>
-      <div class="hero" data-hero></div>
-      <div class="card">
-        <span class="dot accent pulsing"></span>
-        <div class="card__body">
-          <div class="card__title mono">${props.device.name}</div>
-          <div class="card__sub">${label}</div>
+      <div class="stage">
+        <div data-clock></div>
+        <hr class="stage__rule" />
+        <div class="stage__device">
+          <span class="dot accent pulsing"></span>
+          <div>
+            <div class="stage__name mono">${props.device.name}</div>
+            <div class="stage__sub">${label}</div>
+          </div>
         </div>
       </div>
       <div class="busy-stage">
         <div class="busy-stage__halo" aria-hidden="true"></div>
-        <div class="btn btn--circle" data-arc style="background:transparent;color:var(--accent);"></div>
+        <div class="busy-stage__circle" data-arc></div>
       </div>
       <div class="sr-only" role="status" aria-live="polite">${label}</div>
     `,
   );
 
-  const heroHost = root.querySelector<HTMLElement>('[data-hero]');
-  if (heroHost) createHeroClock().mount(heroHost);
+  const clockSlot = root.querySelector<HTMLElement>('[data-clock]');
+  if (clockSlot) createLiveClock().mount(clockSlot);
 
   const arcHost = root.querySelector<HTMLElement>('[data-arc]');
   if (arcHost) progressArc(arcHost, 1400);

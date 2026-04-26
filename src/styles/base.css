@@ -20,18 +20,19 @@ body {
 
 body {
   min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: max(env(safe-area-inset-top), 24px) 16px max(env(safe-area-inset-bottom), 24px);
+  padding: max(env(safe-area-inset-top), 32px) 20px max(env(safe-area-inset-bottom), 32px);
 }
 
+/*
+ * Centering with `margin: 0 auto` rather than a flex parent so `max-width`
+ * is reliably respected even when children request `width: 100%`.
+ */
 #app {
-  width: 100%;
-  max-width: 440px;
+  max-width: 420px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-5);
 }
 
 .mono {
@@ -40,10 +41,11 @@ body {
 }
 
 .micro {
-  font-size: 11px;
-  letter-spacing: 0.18em;
+  font-size: 10px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-faint);
+  font-weight: 600;
 }
 
 button {

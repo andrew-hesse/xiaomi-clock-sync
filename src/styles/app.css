@@ -1,98 +1,131 @@
+/* ---------- Header (sub-brand mark) ---------------------------------- */
+
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100%;
+  margin-bottom: var(--space-3);
 }
 
-.hero {
-  text-align: center;
+/* ---------- Stage: the unified clock+device composition --------------- */
+/*
+ * The clock and the device meta belong to the same "object" — the watchstand.
+ * One container, one surface, two horizontal hairline rules separating the
+ * three rows (time, meta, status). Reads as a single artifact, not stacked
+ * sections.
+ */
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: var(--space-5) var(--space-4);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-4);
+  transition:
+    var(--transition-color),
+    background-color 800ms ease;
 }
 
-.hero__time {
-  font-size: clamp(44px, 13vw, 76px);
+.stage.flash {
+  background: var(--accent-glow);
+}
+
+.stage__time {
+  font-size: clamp(40px, 11vw, 60px);
   line-height: 1;
   letter-spacing: -0.03em;
   color: var(--ink);
   font-weight: 500;
+  text-align: center;
   white-space: nowrap;
 }
 
-.hero__time .digit {
+.stage__time .digit {
   display: inline-block;
 }
 
 /*
- * Render the colon as two CSS-drawn dots rather than rely on the font's `:`
- * glyph, which at heavy weights and large sizes tends to fuse the two dots
- * into a single rectangle. The actual `:` character is hidden via `color:
- * transparent` so screen readers still announce "nine colon twenty-nine".
+ * Colon: two CSS-drawn dots so heavy-weight fonts don't fuse them into a
+ * rectangle. Sized small so they read as punctuation, not decoration.
  */
-.hero__time .colon {
+.stage__time .colon {
   display: inline-block;
-  width: 0.32em;
+  width: 0.24em;
   height: 1em;
   position: relative;
   vertical-align: baseline;
   color: transparent;
   transition: opacity 0.2s ease;
 }
-.hero__time .colon::before,
-.hero__time .colon::after {
+.stage__time .colon::before,
+.stage__time .colon::after {
   content: "";
   position: absolute;
   left: 50%;
-  width: 0.16em;
-  height: 0.16em;
+  width: 0.1em;
+  height: 0.1em;
   border-radius: 50%;
-  background: var(--ink);
+  background: var(--ink-muted);
   transform: translateX(-50%);
 }
-.hero__time .colon::before {
-  top: 26%;
+.stage__time .colon::before {
+  top: 30%;
 }
-.hero__time .colon::after {
-  bottom: 26%;
+.stage__time .colon::after {
+  bottom: 30%;
 }
-.hero__time .colon.dim {
-  opacity: 0.4;
+.stage__time .colon.dim {
+  opacity: 0.35;
 }
 
-.hero__date {
+.stage__date {
   color: var(--ink-muted);
-  font-size: 13px;
-}
-
-.hero__caption {
-  color: var(--ink-faint);
-  font-size: 13px;
+  font-size: 12.5px;
   text-align: center;
+  margin-top: -4px;
 }
 
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-card);
-  padding: var(--space-4);
+.stage__rule {
+  height: 1px;
+  background: var(--border);
+  border: 0;
+  margin: 0;
+}
+
+.stage__device {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  transition:
-    var(--transition-color),
-    background-color 800ms ease;
 }
 
-.card.flash {
-  background: var(--accent-glow);
+.stage__name {
+  font-size: 14px;
+  letter-spacing: -0.01em;
 }
+
+.stage__sub {
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-top: 1px;
+}
+
+.stage__sub--error {
+  color: var(--danger);
+}
+
+.stage__caption {
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+/* ---------- Status dot ----------------------------------------------- */
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--ink-faint);
   flex-shrink: 0;
@@ -128,43 +161,31 @@
   }
 }
 
-.card__body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.card__title {
-  font-size: 15px;
-}
-.card__sub {
-  font-size: 13px;
-  color: var(--ink-muted);
-}
+/* ---------- Action button -------------------------------------------- */
 
 .btn {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 56px;
+  height: 50px;
   background: var(--accent);
   color: var(--bg);
   border: 0;
-  border-radius: var(--radius-button);
+  border-radius: 12px;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 15px;
+  letter-spacing: 0.01em;
   cursor: pointer;
   transition:
     transform 120ms ease,
-    box-shadow 120ms ease,
-    width 320ms ease,
-    border-radius 320ms ease;
+    box-shadow 160ms ease,
+    background-color 160ms ease;
 }
 
 .btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px var(--accent-glow);
+  box-shadow: 0 8px 20px var(--accent-glow);
 }
 .btn:active {
   transform: scale(0.98) translateY(1px);
@@ -181,50 +202,76 @@
   background: var(--danger);
 }
 
-.btn--circle {
-  width: 56px;
-  border-radius: 50%;
-  margin: 0 auto;
-}
-
+/* ---------- Busy stage (the morphing circle) ------------------------- */
+/*
+ * Width-constrained wrapper so the absolutely-positioned halo (inset: -10px)
+ * hugs the 56px circle button instead of stretching across the parent.
+ */
 .busy-stage {
   position: relative;
-  display: flex;
-  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto;
   color: var(--accent);
 }
 
 .busy-stage__halo {
   position: absolute;
-  inset: -8px;
+  inset: -10px;
   border-radius: 50%;
   background: var(--accent-glow);
   animation: pulse 1.6s ease-in-out infinite;
   pointer-events: none;
 }
 
+.busy-stage__circle {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--accent);
+}
+
+/* ---------- Tertiary actions (inline) -------------------------------- */
+
 .tertiary {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.tertiary__sep {
+  color: var(--ink-faint);
+  font-size: 11px;
 }
 
 .link {
   background: none;
   border: 0;
   color: var(--ink-muted);
-  font-size: 13px;
+  font-size: 12.5px;
   cursor: pointer;
-  padding: 6px;
+  padding: 6px 4px;
+  border-radius: 4px;
 }
 .link:hover {
   color: var(--ink);
 }
+.link--danger:hover {
+  color: var(--danger);
+}
+
+/* ---------- Error + animations --------------------------------------- */
 
 .error-text {
   color: var(--danger);
-  font-size: 14px;
+  font-size: 13px;
   text-align: center;
 }
 

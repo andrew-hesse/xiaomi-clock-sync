@@ -1,4 +1,4 @@
-import { createHeroClock } from '../clock';
+import { createLiveClock } from '../clock';
 import { html, setHtml } from '../dom';
 
 export type FirstVisitProps = { onPair: () => void };
@@ -10,22 +10,24 @@ export function renderFirstVisit(props: FirstVisitProps): HTMLElement {
     root,
     html`
       <header class="header"><span class="micro">Clock Sync</span></header>
-      <div class="hero" data-hero></div>
-      <div class="hero__caption">no clock paired</div>
-      <button class="btn btn--ghost" data-pair type="button">
-        Pair Xiaomi clock
-      </button>
-      <p class="card__sub" style="text-align:center;">
-        Make sure Bluetooth is on and the clock is within ~5 metres.
+      <div class="stage">
+        <div data-clock></div>
+        <hr class="stage__rule" />
+        <div class="stage__caption">no clock paired</div>
+      </div>
+      <button class="btn btn--ghost" data-pair type="button">Pair Xiaomi clock</button>
+      <p class="stage__caption" style="margin-top:-8px;">
+        Make sure Bluetooth is on and the clock is within ~5 m.
       </p>
     `,
   );
 
-  const heroHost = root.querySelector<HTMLElement>('[data-hero]');
-  if (heroHost) createHeroClock().mount(heroHost);
+  const clockSlot = root.querySelector<HTMLElement>('[data-clock]');
+  if (clockSlot) createLiveClock().mount(clockSlot);
 
-  const pairBtn = root.querySelector<HTMLButtonElement>('[data-pair]');
-  pairBtn?.addEventListener('click', () => props.onPair());
+  root
+    .querySelector<HTMLButtonElement>('[data-pair]')
+    ?.addEventListener('click', () => props.onPair());
 
   return root;
 }
