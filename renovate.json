@@ -83,7 +83,7 @@
     "schedule": ["at any time"],
     "prPriority": 100,
     "automerge": true,
-    "recreateClosed": true
+    "recreateWhen": "always"
   },
   "postUpdateOptions": ["gomodTidy", "npmDedupe"],
   "rangeStrategy": "bump",
