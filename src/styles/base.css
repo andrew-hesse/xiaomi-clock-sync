@@ -30,9 +30,17 @@ body {
 #app {
   max-width: 420px;
   margin: 0 auto;
+}
+
+/*
+ * Each rendered view is a flex column. The vertical rhythm between header,
+ * stage, primary action, and tertiary lives here — NOT on #app, because #app
+ * only ever has one child (the active view).
+ */
+.view {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: 28px;
 }
 
 .mono {
